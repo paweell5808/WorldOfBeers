@@ -1,0 +1,10 @@
+.tabs-container {
+  display: flex;
+  padding: 5px;
+  flex-wrap: nowrap;
+}
+
+.inner-container {
+  margin: 5px;
+  flex: 33.33%;
+}

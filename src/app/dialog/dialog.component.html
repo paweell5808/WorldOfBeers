@@ -1,0 +1,33 @@
+<div *ngIf="url">
+  <img src="{{url}}" alt="beer image">
+</div>
+
+<div *ngIf="optionsDialog" class="optionsDialogContainer">
+  <mat-slide-toggle (change)="toggle($event)" [checked]="options.theme === 'theme-dark'">Dark mode</mat-slide-toggle>
+  <div>
+    <mat-form-field>
+      <mat-label>Page size</mat-label>
+      <input matInput type="number" min="1" max="100" (change)="changeValue()"
+             [(ngModel)]="options.pageSize" [value]="options.pageSize">
+    </mat-form-field>
+  </div>
+  <div>
+    <p>
+      Sort by:
+      <mat-button-toggle-group name="tabColumns" [(ngModel)]="options.sortBy" [value]="options.sortBy">
+        <mat-button-toggle (change)="changeValue()" value="name">Name</mat-button-toggle>
+        <mat-button-toggle (change)="changeValue()" value="type">Type</mat-button-toggle>
+        <mat-button-toggle (change)="changeValue()" value="price">Price</mat-button-toggle>
+      </mat-button-toggle-group>
+    </p>
+  </div>
+  <div>
+    <p>
+      Sort order:
+      <mat-button-toggle-group name="sortOrder" [(ngModel)]="options.sortOrder" [value]="options.sortOrder">
+        <mat-button-toggle (change)="changeValue()" value="asc">Ascending</mat-button-toggle>
+        <mat-button-toggle (change)="changeValue()" value="desc">Descending</mat-button-toggle>
+      </mat-button-toggle-group>
+    </p>
+  </div>
+</div>

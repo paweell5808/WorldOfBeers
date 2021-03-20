@@ -1,0 +1,9 @@
+<mat-form-field>
+  <mat-label>Select brewer</mat-label>
+  <mat-select disableRipple (selectionChange)='onOptionsSelected($event)' [(value)]="cachedValue">
+    <mat-option *ngFor="let brewer of brewers" [value]="brewer">{{brewer}}</mat-option>
+  </mat-select>
+</mat-form-field>
+
+<app-table [getBeers]="getBeersSubject" [getSelectedValue]="getSelectedValueSubject" [tableNumber]="dropNumber"></app-table>
+
