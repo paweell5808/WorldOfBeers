@@ -14,17 +14,17 @@ export class DropdownComponent implements OnInit {
   @Input() dropNumber?: string;
 
   brewers = [];
-  cachedValue: string;
+  selectedValue: string;
 
   getSelectedValueSubject = new BehaviorSubject<string>('&nbsp');
 
   constructor(private beersService: BeersService, private storage: LocalStorageService) { }
 
   ngOnInit(): void {
-    this.getBeers();
+    this.getBrewers();
   }
 
-  getBeers(): void {
+  getBrewers(): void {
     this.beersService.getBeers.subscribe(beers => {
       beers.forEach(beer => {
         // Add unique brewer to array
@@ -34,8 +34,7 @@ export class DropdownComponent implements OnInit {
       });
       // This sort brewers in ascending order
       this.brewers.sort((a, b) => (a > b) ? 1 : -1);
-      // Set cached items to mat-select value and fill table
-      this.setCachedItemsToTable();
+      this.setSelectedValue();
     });
   }
 
@@ -43,10 +42,11 @@ export class DropdownComponent implements OnInit {
     this.getSelectedValueSubject.next(event.value);
   }
 
-  setCachedItemsToTable(): void {
+  // Set cached value to selectedValue if exist
+  setSelectedValue(): void {
     const optionStorageItems = this.storage.get('selectedValues');
     if (optionStorageItems && optionStorageItems[this.dropNumber]) {
-      this.cachedValue = optionStorageItems[this.dropNumber];
+      this.selectedValue = optionStorageItems[this.dropNumber];
       this.getSelectedValueSubject.next(optionStorageItems[this.dropNumber]);
     }
   }

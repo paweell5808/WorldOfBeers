@@ -8,7 +8,7 @@ import { LocalStorageService } from './local-storage.service';
 })
 export class OptionsService {
   private options = new BehaviorSubject<DefaultOptions>({
-    pageSize: 5,
+    pageSize: 15,
     theme: 'theme-light',
     sortBy: 'name',
     sortOrder: 'asc'

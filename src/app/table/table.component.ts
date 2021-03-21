@@ -31,32 +31,41 @@ export class TableComponent implements OnInit {
               private optionsService: OptionsService, private beersService: BeersService) {}
 
   ngOnInit(): void {
+    this.getBeers();
+  }
+
+  private getBeers(): void {
     this.beersService.getBeers.subscribe(beers => {
       this.dataSource = new MatTableDataSource(beers);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
 
-      // Get default options for table size and sort direction
-      this.optionsService.getOptions.subscribe(config => {
-        if (this.dataSource) {
-          this.dataSource.paginator._changePageSize(config.pageSize);
-        }
-        this.pageSize = config.pageSize;
+      this.setTableOptions();
+      this.filterTable();
+    });
+  }
 
-        const sortState: Sort = {active: config.sortBy, direction: config.sortOrder};
-        this.sort.active = sortState.active;
-        this.sort.direction = sortState.direction;
-        this.sort.sortChange.emit(sortState);
-      });
+  private setTableOptions(): void {
+    this.optionsService.getOptions.subscribe(config => {
+      if (this.dataSource) {
+        this.dataSource.paginator._changePageSize(config.pageSize);
+      }
+      this.pageSize = config.pageSize;
 
-      // Get selected value from DropDrown Select component
-      this.getSelectedValue.subscribe(value => {
-        this.dataSource.filterPredicate = (data: Beer, filter: string) => {
-          return data.brewer === filter;
-        };
-        this.dataSource.filter = value;
-        this.addValuesToCache(value);
-      });
+      const sortState: Sort = {active: config.sortBy, direction: config.sortOrder};
+      this.sort.active = sortState.active;
+      this.sort.direction = sortState.direction;
+      this.sort.sortChange.emit(sortState);
+    });
+  }
+
+  private filterTable(): void {
+    this.getSelectedValue.subscribe(value => {
+      this.dataSource.filterPredicate = (data: Beer, filter: string) => {
+        return data.brewer === filter;
+      };
+      this.dataSource.filter = value;
+      this.addValuesToCache(value);
     });
   }
 
@@ -67,7 +76,7 @@ export class TableComponent implements OnInit {
   }
 
   // Add selected value from Select component to Local Storage
-  addValuesToCache(value): void {
+  private addValuesToCache(value): void {
     const optionStorageItems = this.storage.get('selectedValues') || {};
     const newStorageObject = {
       [this.tableNumber]: value
