@@ -39,6 +39,13 @@ module.exports = function (config) {
     autoWatch: true,
     browsers: ['Chrome'],
     singleRun: false,
-    restartOnFileChange: true
+    restartOnFileChange: true,
+    proxies: {
+      '/beers/': {
+        'target': 'http://ontariobeerapi.ca/beers/',
+        'secure': false,
+        'changeOrigin': true
+      }
+    }
   });
 };

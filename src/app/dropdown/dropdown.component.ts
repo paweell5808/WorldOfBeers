@@ -1,9 +1,8 @@
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { BeersService } from '../services/beers.service';
-import { Beer } from '../interfaces/beer';
 import { MatSelectChange } from '@angular/material/select';
-import { of, from, Observable, pipe, Subject, BehaviorSubject } from 'rxjs';
-import {LocalStorageService} from '../services/local-storage.service';
+import { BehaviorSubject } from 'rxjs';
+import { LocalStorageService } from '../services/local-storage.service';
 
 @Component({
   selector: 'app-dropdown',

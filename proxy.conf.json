@@ -1,5 +1,5 @@
 {
-  "/beers/*": {
+  "/beers/": {
     "target": "http://ontariobeerapi.ca",
     "secure": false,
     "logLevel": "debug",

@@ -10,7 +10,13 @@ describe('OptionsService', () => {
     service = TestBed.inject(OptionsService);
   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
+  it('should be return default options', () => {
+    service.getOptions.subscribe(options => {
+      expect(options.pageSize).toBeGreaterThan(0);
+      expect(options.theme).toContain('light');
+      expect(options.sortBy).toBe('name');
+      expect(options.sortOrder).toBe('asc');
+    });
   });
+
 });

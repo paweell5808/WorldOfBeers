@@ -21,4 +21,12 @@ export class LocalStorageService {
       return null;
     }
   }
+
+  clear(key: string): void {
+    try {
+      localStorage.removeItem(key);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 }

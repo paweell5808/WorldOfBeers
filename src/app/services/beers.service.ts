@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Beer } from '../interfaces/beer';
 
@@ -7,20 +7,20 @@ import { Beer } from '../interfaces/beer';
   providedIn: 'root'
 })
 export class BeersService {
-  private beersUrl = '/beers/';
-  private beers = new Subject<Beer[]>();
+  public beersUrl = '/beers/';
+  public beers = new Subject<Beer[]>();
 
-  constructor(private http: HttpClient) {
-    this.fetchBeers();
+  constructor(public http: HttpClient) {
+    this.fetchBeers().subscribe(
+      beers => this.beers.next(beers),
+      error => console.error(error.message)
+    );
   }
 
   getBeers = this.beers.asObservable();
 
-  fetchBeers(): void {
-    this.http.get<Beer[]>(this.beersUrl).subscribe(
-      beers => this.beers.next(beers),
-      error => console.error(error.message)
-    );
+  fetchBeers(): Observable<Beer[]> {
+    return this.http.get<Beer[]>(this.beersUrl);
   }
 
 }

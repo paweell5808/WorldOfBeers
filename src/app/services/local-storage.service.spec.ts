@@ -10,7 +10,10 @@ describe('LocalStorageService', () => {
     service = TestBed.inject(LocalStorageService);
   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
+  it('should save, write and remove string', () => {
+    service.set('testValue', 'temp');
+    expect(service.get('testValue')).toBe('temp');
+    service.clear('testValue');
+    expect(service.get('testValue')).toBeNull();
   });
 });
