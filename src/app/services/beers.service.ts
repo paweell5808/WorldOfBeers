@@ -1,22 +1,26 @@
 import { Injectable } from '@angular/core';
-import { Observable} from 'rxjs';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Subject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Beer } from '../interfaces/beer';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BeersService {
-
   private beersUrl = '/beers/';
+  private beers = new Subject<Beer[]>();
 
-  httpOptions = {
-    headers: new HttpHeaders({'Content-Type': 'application/json'})
-  };
-
-  constructor(private http: HttpClient) { }
-
-  /** GET beers from the server */
-  getBeers(): Observable<any> {
-    return this.http.get(this.beersUrl);
+  constructor(private http: HttpClient) {
+    this.fetchBeers();
   }
+
+  getBeers = this.beers.asObservable();
+
+  fetchBeers(): void {
+    this.http.get<Beer[]>(this.beersUrl).subscribe(
+      beers => this.beers.next(beers),
+      error => console.error(error.message)
+    );
+  }
+
 }

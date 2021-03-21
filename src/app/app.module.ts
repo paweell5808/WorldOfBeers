@@ -22,7 +22,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
-import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
     MatFormFieldModule,
     MatInputModule,
     FormsModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    MatIconModule
   ],
   providers: [],
   bootstrap: [AppComponent]

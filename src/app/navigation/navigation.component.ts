@@ -2,15 +2,15 @@ import {Component, HostBinding, Inject, OnInit, Renderer2,} from '@angular/core'
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../dialog/dialog.component';
 import { DOCUMENT } from '@angular/common';
-import { LocalStorageService } from '../services/local-storage.service';
 import { DefaultOptions } from '../interfaces/default-options';
-import {OptionsService} from '../services/options.service';
+import { OptionsService } from '../services/options.service';
 
 @Component({
   selector: 'app-navigation',
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.scss']
 })
+
 export class NavigationComponent implements OnInit {
   options: DefaultOptions;
 
@@ -24,6 +24,7 @@ export class NavigationComponent implements OnInit {
     });
   }
 
+  // Open dialog with table and website options
   openDialog(): void {
     const dialogRef = this.dialog.open(DialogComponent);
 
