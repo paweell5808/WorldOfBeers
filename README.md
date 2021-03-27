@@ -32,9 +32,9 @@ Project is created with:
 ## Setup
 To run this project, install it locally using npm:
 
-$ git clone https://github.com/paweell5808/WorldOfBeers.git
-$ cd WorldOfBeers
-$ npm install
+- $ git clone https://github.com/paweell5808/WorldOfBeers.git
+- $ cd WorldOfBeers
+- $ npm install
 
 ## Development server
 
