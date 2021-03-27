@@ -1,8 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { BeersService } from '../services/beers.service';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { BeersService } from '../../services/beers.service';
 import { MatSelectChange } from '@angular/material/select';
 import { BehaviorSubject } from 'rxjs';
-import { LocalStorageService } from '../services/local-storage.service';
+import { LocalStorageService } from '../../services/local-storage.service';
 
 @Component({
   selector: 'app-dropdown',
@@ -10,13 +10,14 @@ import { LocalStorageService } from '../services/local-storage.service';
   styleUrls: ['./dropdown.component.scss']
 })
 
-export class DropdownComponent implements OnInit {
+export class DropdownComponent implements OnInit, OnDestroy {
   @Input() dropNumber?: string;
 
+  getBrewersValues;
   brewers = [];
   selectedValue: string;
 
-  getSelectedValueSubject = new BehaviorSubject<string>('&nbsp');
+  selectedValueSubject = new BehaviorSubject<string>('&nbsp');
 
   constructor(private beersService: BeersService, private storage: LocalStorageService) { }
 
@@ -24,22 +25,19 @@ export class DropdownComponent implements OnInit {
     this.getBrewers();
   }
 
+  ngOnDestroy(): void {
+    this.getBrewersValues.unsubscribe();
+  }
+
   getBrewers(): void {
-    this.beersService.getBeers.subscribe(beers => {
-      beers.forEach(beer => {
-        // Add unique brewer to array
-        if (this.brewers.indexOf(beer.brewer) === -1) {
-          this.brewers.push(beer.brewer);
-        }
-      });
-      // This sort brewers in ascending order
-      this.brewers.sort((a, b) => (a > b) ? 1 : -1);
+    this.getBrewersValues = this.beersService.getBrewers().subscribe(brewers => {
+      this.brewers = brewers;
       this.setSelectedValue();
     });
   }
 
   onOptionsSelected(event: MatSelectChange): void {
-    this.getSelectedValueSubject.next(event.value);
+    this.selectedValueSubject.next(event.value);
   }
 
   // Set cached value to selectedValue if exist
@@ -47,7 +45,7 @@ export class DropdownComponent implements OnInit {
     const optionStorageItems = this.storage.get('selectedValues');
     if (optionStorageItems && optionStorageItems[this.dropNumber]) {
       this.selectedValue = optionStorageItems[this.dropNumber];
-      this.getSelectedValueSubject.next(optionStorageItems[this.dropNumber]);
+      this.selectedValueSubject.next(optionStorageItems[this.dropNumber]);
     }
   }
 }

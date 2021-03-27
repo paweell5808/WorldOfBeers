@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { of, from, Observable, pipe, Subject, BehaviorSubject } from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import { DefaultOptions } from '../interfaces/default-options';
 import { LocalStorageService } from './local-storage.service';
 
@@ -20,7 +20,9 @@ export class OptionsService {
     }
   }
 
-  getOptions = this.options.asObservable();
+  getOptions(): Observable<DefaultOptions> {
+    return this.options.asObservable();
+  }
 
   setOptions(config: DefaultOptions): void {
     this.options.next(config);

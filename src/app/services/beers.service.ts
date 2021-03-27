@@ -1,26 +1,47 @@
 import { Injectable } from '@angular/core';
-import {Observable, Subject} from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map, share } from 'rxjs/operators';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Beer } from '../interfaces/beer';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class BeersService {
   public beersUrl = '/beers/';
-  public beers = new Subject<Beer[]>();
+  public beers: Observable<Beer[]> = this.http.get<Beer[]>(this.beersUrl).pipe(
+    share(),
+    catchError(this.handleError),
+  );
 
-  constructor(public http: HttpClient) {
-    this.fetchBeers().subscribe(
-      beers => this.beers.next(beers),
-      error => console.error(error.message)
+  constructor(public http: HttpClient) {}
+
+  getBeers(): Observable<Beer[]> {
+    return this.beers;
+  }
+
+  getBrewers(): Observable<Beer[]> {
+    return this.getBeers().pipe(
+      map(beers => {
+        const beersArray = [];
+        beers.forEach(beer => {
+          // Add unique brewer to array
+          if (beersArray.indexOf(beer.brewer) === -1) {
+            beersArray.push(beer.brewer);
+          }
+        });
+        // This sort brewers in ascending order
+        beersArray.sort((a, b) => (a > b) ? 1 : -1);
+        return beersArray;
+      })
     );
   }
 
-  getBeers = this.beers.asObservable();
-
-  fetchBeers(): Observable<Beer[]> {
-    return this.http.get<Beer[]>(this.beersUrl);
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    const errorMessage = `Error Code: ${error.status} Message: ${error.message}`;
+    console.error(errorMessage);
+    return throwError(errorMessage);
   }
 
 }

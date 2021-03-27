@@ -1,9 +1,9 @@
-import {Component, HostBinding, Inject, OnInit, Renderer2,} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit, Renderer2} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../dialog/dialog.component';
 import { DOCUMENT } from '@angular/common';
-import { DefaultOptions } from '../interfaces/default-options';
-import { OptionsService } from '../services/options.service';
+import { DefaultOptions } from '../../interfaces/default-options';
+import { OptionsService } from '../../services/options.service';
 
 @Component({
   selector: 'app-navigation',
@@ -11,17 +11,22 @@ import { OptionsService } from '../services/options.service';
   styleUrls: ['./navigation.component.scss']
 })
 
-export class NavigationComponent implements OnInit {
+export class NavigationComponent implements OnInit, OnDestroy {
   options: DefaultOptions;
+  getOptionsService;
 
   constructor(public dialog: MatDialog, @Inject(DOCUMENT) private document: Document, private renderer: Renderer2,
               private optionsService: OptionsService) {}
 
   ngOnInit(): void {
-    this.optionsService.getOptions.subscribe(config => {
+    this.getOptionsService = this.optionsService.getOptions().subscribe(config => {
       this.options = config;
       this.renderer.setAttribute(this.document.body, 'class', config.theme);
     });
+  }
+
+  ngOnDestroy(): void {
+    this.getOptionsService.unsubscribe();
   }
 
   // Open dialog with table and website options

@@ -1,14 +1,14 @@
-import { OnInit , Component, Input, ViewChild} from '@angular/core';
-import { Beer } from '../interfaces/beer';
-import {MatSort, Sort} from '@angular/material/sort';
+import { OnInit , OnDestroy, Component, Input, ViewChild} from '@angular/core';
+import { Beer } from '../../interfaces/beer';
+import { MatSort, Sort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { DialogComponent } from '../dialog/dialog.component';
-import { LocalStorageService } from '../services/local-storage.service';
-import { OptionsService } from '../services/options.service';
-import { BeersService } from '../services/beers.service';
+import { LocalStorageService } from '../../services/local-storage.service';
+import { OptionsService } from '../../services/options.service';
+import { BeersService } from '../../services/beers.service';
 
 @Component({
   selector: 'app-table',
@@ -16,8 +16,8 @@ import { BeersService } from '../services/beers.service';
   styleUrls: ['./table.component.scss']
 })
 
-export class TableComponent implements OnInit {
-  @Input() getSelectedValue?: Observable<string>;
+export class TableComponent implements OnInit, OnDestroy {
+  @Input() selectedValue?: Observable<string>;
   @Input() tableNumber?: string;
 
   @ViewChild(MatSort) sort: MatSort;
@@ -27,6 +27,10 @@ export class TableComponent implements OnInit {
   displayedColumns: string[] = ['name', 'type', 'price', 'image_url'];
   pageSize: number;
 
+  getBeersValues;
+  getOptionsValues;
+  getSelectedValues;
+
   constructor(public dialog: MatDialog, private storage: LocalStorageService,
               private optionsService: OptionsService, private beersService: BeersService) {}
 
@@ -34,8 +38,14 @@ export class TableComponent implements OnInit {
     this.getBeers();
   }
 
+  ngOnDestroy(): void {
+    this.getBeersValues.unsubscribe();
+    this.getOptionsValues.unsubscribe();
+    this.getSelectedValues.unsubscribe();
+  }
+
   private getBeers(): void {
-    this.beersService.getBeers.subscribe(beers => {
+    this.getBeersValues = this.beersService.getBeers().subscribe(beers => {
       this.dataSource = new MatTableDataSource(beers);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
@@ -46,7 +56,7 @@ export class TableComponent implements OnInit {
   }
 
   private setTableOptions(): void {
-    this.optionsService.getOptions.subscribe(config => {
+    this.getOptionsValues = this.optionsService.getOptions().subscribe(config => {
       if (this.dataSource) {
         this.dataSource.paginator._changePageSize(config.pageSize);
       }
@@ -60,7 +70,7 @@ export class TableComponent implements OnInit {
   }
 
   private filterTable(): void {
-    this.getSelectedValue.subscribe(value => {
+    this.getSelectedValues = this.selectedValue.subscribe(value => {
       this.dataSource.filterPredicate = (data: Beer, filter: string) => {
         return data.brewer === filter;
       };

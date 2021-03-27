@@ -1,6 +1,6 @@
 import {Component, EventEmitter} from '@angular/core';
 import {MatSlideToggleChange} from '@angular/material/slide-toggle';
-import { DefaultOptions } from '../interfaces/default-options';
+import { DefaultOptions } from '../../interfaces/default-options';
 
 @Component({
   selector: 'app-dialog',

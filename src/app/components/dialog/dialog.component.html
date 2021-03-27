@@ -3,7 +3,8 @@
 </button>
 
 <div *ngIf="url">
-  <img src="{{url}}" alt="beer image">
+  <img src="{{url}}" alt="beer image"
+       onerror="this.src='https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png';">
 </div>
 
 <div *ngIf="optionsDialog" class="optionsDialogContainer">
